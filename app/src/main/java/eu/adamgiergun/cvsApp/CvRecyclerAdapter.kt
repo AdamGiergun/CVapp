@@ -26,23 +26,18 @@ class CvRecyclerAdapter (private val cv: CV) :
         fun bind(cvItem: CvItem) {
             val itemTextView = itemView.findViewById<TextView>(R.id.itemTextView)
             itemTextView.text = cvItem.text
-            if (cvItem.isHeader) {
-                itemTextView.setTypeface(null, Typeface.BOLD)
-            } else {
-                itemTextView.setTypeface(null, Typeface.NORMAL)
-            }
 
-            val cardView = itemView as CardView
-            cardView.setCardBackgroundColor(getColor(cvItem.isHeader))
-        }
-
-        private fun getColor(isHeader: Boolean): Int {
+            val color: Int
             val resources = itemView.context.resources
-            return if (isHeader) {
+            color = if (cvItem.isHeader) {
+                itemTextView.setTypeface(null, Typeface.BOLD)
                 resources.getColor(R.color.colorHeader, null)
             } else {
+                itemTextView.setTypeface(null, Typeface.NORMAL)
                 resources.getColor(R.color.colorItem, null)
             }
+            val cardView = itemView as CardView
+            cardView.setCardBackgroundColor(color)
         }
     }
 }
