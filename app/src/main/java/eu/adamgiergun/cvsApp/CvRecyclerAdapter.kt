@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class CvRecyclerAdapter (private val cv: CV) :
+internal class CvRecyclerAdapter (private val cv: CV) :
     RecyclerView.Adapter<CvRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,7 +22,7 @@ class CvRecyclerAdapter (private val cv: CV) :
         holder.bind(cvItem)
     }
 
-    class ViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
+    internal class ViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
         fun bind(cvItem: CvItem) {
             val itemTextView = itemView.findViewById<TextView>(R.id.itemTextView)
             itemTextView.text = cvItem.text

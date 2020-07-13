@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
-class MainActivity : AppCompatActivity() {
+internal class MainActivity : AppCompatActivity() {
     private val hideHandler = Handler()
 
     @SuppressLint("InlinedApi")
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
     }
 
-    companion object {
+    internal companion object {
         /**
          * Whether or not the system UI should be auto-hidden after
          * [AUTO_HIDE_DELAY_MILLIS] milliseconds.

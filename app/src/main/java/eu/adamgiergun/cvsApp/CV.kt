@@ -1,7 +1,7 @@
 package eu.adamgiergun.cvsApp
 
-class CV constructor(): ArrayList<CvItem>() {
-    constructor(info: String) : this() {
+internal class CV constructor(): ArrayList<CvItem>() {
+    internal constructor(info: String) : this() {
         this.add(CvItem(false, info))
     }
 }
