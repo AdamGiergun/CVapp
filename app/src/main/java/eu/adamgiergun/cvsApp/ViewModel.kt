@@ -13,15 +13,15 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var downloadId by Delegates.notNull<Long>()
 
-    private val downloadManager =
-        getApplication<Application>()
-            .getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+    private fun getApp() = getApplication<Application>()
+
+    private fun getDownloadManager() = getApp().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
     private fun getDownloadManagerCursor(): Cursor {
         val query =
             DownloadManager.Query()
                 .setFilterById(downloadId)
-        return downloadManager.query(query)
+        return getDownloadManager().query(query)
     }
 
     private fun isDownloadStatusSuccessful(cursor: Cursor): Boolean {
@@ -43,7 +43,7 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
                     setMimeType("application/xml")
                 }
 
-        downloadId = downloadManager.enqueue(request)
+        downloadId = getDownloadManager().enqueue(request)
 
         Thread(Runnable {
             var isDownloading = true
@@ -64,38 +64,30 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
     internal fun onBroadcastReceive(id: Long): CV {
 
         fun getCvContent(): CV {
-            val cursor = getDownloadManagerCursor()
             val cv = CV()
-
-            if (cursor.moveToFirst()) {
-                if (isDownloadStatusSuccessful(cursor)) {
-                    fun getParser(): XmlPullParser {
-                        val xmlFactoryObject = XmlPullParserFactory.newInstance()
-                        return xmlFactoryObject.newPullParser()
-                    }
-
-                    val myParser = getParser()
-
-                    fun getInputStream(): InputStream? {
-                        val localURI =
-                            Uri.parse(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)))
-                        return getApplication<Application>().contentResolver.openInputStream(
-                            localURI
-                        )
-                    }
-                    myParser.setInput(getInputStream(), null)
-
-                    var event = myParser.eventType
-                    while (event != XmlPullParser.END_DOCUMENT) {
-                        when (event) {
-                            XmlPullParser.START_TAG -> {
-                                cv.add(CvItem(true, myParser.name.replace("_", " ")))
-                            }
-                            XmlPullParser.TEXT -> {
-                                cv.add(CvItem(false, myParser.text))
-                            }
+            getDownloadManagerCursor().use {
+                if (it.moveToFirst()) {
+                    if (isDownloadStatusSuccessful(it)) {
+                        fun getInputStream(): InputStream? {
+                            val localURI =
+                                Uri.parse(it.getString(it.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)))
+                            return getApp().contentResolver
+                                .openInputStream(localURI)
                         }
-                        event = myParser.next()
+
+                        val myParser = XmlPullParserFactory.newInstance().newPullParser()
+                        myParser.setInput(getInputStream(), null)
+
+                        var event = myParser.eventType
+                        while (event != XmlPullParser.END_DOCUMENT) {
+                            when (event) {
+                                XmlPullParser.START_TAG ->
+                                    cv.add(CvItem(true, myParser.name.replace("_", " ")))
+                                XmlPullParser.TEXT ->
+                                    cv.add(CvItem(false, myParser.text))
+                            }
+                            event = myParser.next()
+                        }
                     }
                 }
             }
@@ -105,11 +97,8 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
         return if (downloadId == id) {
             getCvContent()
         } else {
-            fun getInfoAboutFailure(): String {
-                val application = getApplication<Application>()
-                return application.getString(R.string.info_about_failed_download_of_cv)
-            }
-            CV(getInfoAboutFailure())
+            val infoAboutDownloadFailure=  getApp().getString(R.string.info_about_failed_download_of_cv)
+            CV(infoAboutDownloadFailure)
         }
     }
 }
