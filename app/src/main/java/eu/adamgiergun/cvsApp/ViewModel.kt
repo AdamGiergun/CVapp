@@ -61,18 +61,22 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
         }).start()
     }
 
-    internal fun onBroadcastReceive(id: Long): CV {
-
+    internal fun getCv(id: Long): CV {
         fun getCvContent(): CV {
             val cv = CV()
             getDownloadManagerCursor().use {
                 if (it.moveToFirst()) {
                     if (isDownloadStatusSuccessful(it)) {
                         fun getInputStream(): InputStream? {
-                            val localURI =
-                                Uri.parse(it.getString(it.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)))
+                            fun getLocalUri() : Uri {
+                                fun Cursor.getLocalUriString(): String {
+                                    val localUriColumnIndex = this.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                    return this.getString(localUriColumnIndex)
+                                }
+                                return Uri.parse(it.getLocalUriString())
+                            }
                             return getApp().contentResolver
-                                .openInputStream(localURI)
+                                .openInputStream(getLocalUri())
                         }
 
                         val myParser = XmlPullParserFactory.newInstance().newPullParser()

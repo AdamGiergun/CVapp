@@ -15,12 +15,12 @@ internal class MainActivity : AppCompatActivity() {
     @SuppressLint("InlinedApi")
     private val hidePart2Runnable = Runnable {
         cvRecyclerView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            View.SYSTEM_UI_FLAG_LOW_PROFILE or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
 
     private val showPart2Runnable = Runnable {
@@ -38,7 +38,7 @@ internal class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             initialInfo.visibility = View.GONE
-            cvRecyclerView.adapter = CvRecyclerAdapter(viewModel.onBroadcastReceive(id))
+            cvRecyclerView.adapter = CvRecyclerAdapter(viewModel.getCv(id))
         }
     }
 
@@ -54,7 +54,9 @@ internal class MainActivity : AppCompatActivity() {
 
         registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(this.application).create(ViewModel::class.java)
+        viewModel = ViewModelProvider.AndroidViewModelFactory
+            .getInstance(this.application)
+            .create(ViewModel::class.java)
         viewModel.startDownloadingCV()
     }
 
@@ -87,8 +89,8 @@ internal class MainActivity : AppCompatActivity() {
 
     private fun show() {
         cvRecyclerView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         isFullscreen = true
 
         hideHandler.removeCallbacks(hidePart2Runnable)
