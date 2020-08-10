@@ -38,7 +38,7 @@ internal class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             initialInfo.visibility = View.GONE
-            cvRecyclerView.adapter = CvRecyclerAdapter(viewModel.getCv(id))
+            cvRecyclerView.adapter = viewModel.getCvRecyclerAdapter(id)
         }
     }
 
@@ -57,7 +57,6 @@ internal class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider.AndroidViewModelFactory
             .getInstance(this.application)
             .create(ViewModel::class.java)
-        viewModel.startDownloadingCV()
     }
 
     override fun onDestroy() {
