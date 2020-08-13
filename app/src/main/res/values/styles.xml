@@ -19,4 +19,9 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="item_text_style">
+        <item name="android:textSize">@dimen/item_text_size</item>
+        <item name="android:fontFamily">@font/autour_one</item>
+    </style>
+
 </resources>

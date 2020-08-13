@@ -30,10 +30,10 @@ internal class CvRecyclerAdapter (private val cv: CV) :
             val color: Int
             val resources = itemView.context.resources
             color = if (cvItem.isHeader) {
-                itemTextView.setTypeface(null, Typeface.BOLD)
+                itemTextView.setTypeface(itemTextView.typeface, Typeface.BOLD)
                 resources.getColor(R.color.colorHeader, null)
             } else {
-                itemTextView.setTypeface(null, Typeface.NORMAL)
+                itemTextView.setTypeface(itemTextView.typeface, Typeface.NORMAL)
                 resources.getColor(R.color.colorItem, null)
             }
             val cardView = itemView as CardView

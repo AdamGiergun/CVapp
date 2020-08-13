@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 import kotlin.properties.Delegates
 
-class CvSource (downloadManager: DownloadManager) {
+class CvDataSource (downloadManager: DownloadManager) {
 
     internal var downloadId by Delegates.notNull<Long>()
 

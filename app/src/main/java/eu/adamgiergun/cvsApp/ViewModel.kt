@@ -6,10 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 
 internal class ViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val cvSource: CvSource
+    private val cvDataSource: CvDataSource
 
     init {
-        cvSource = CvSource(getDownloadManager())
+        cvDataSource = CvDataSource(getDownloadManager())
     }
 
     private fun getApp() = getApplication<Application>()
@@ -18,8 +18,8 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
         getApp().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
     private fun getCv(id: Long): CV {
-        return if (id == cvSource.downloadId) {
-            cvSource.getCvContent(getDownloadManager(), getApp().contentResolver)
+        return if (id == cvDataSource.downloadId) {
+            cvDataSource.getCvContent(getDownloadManager(), getApp().contentResolver)
         } else {
             val infoAboutDownloadFailure =
                 getApp().getString(R.string.info_about_failed_download_of_cv)

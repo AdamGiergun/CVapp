@@ -20,8 +20,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black_overlay"
             android:orientation="horizontal"
-            tools:ignore="UselessParent">
-        </LinearLayout>
+            tools:ignore="UselessParent" />
     </FrameLayout>
 
     <LinearLayout
@@ -31,11 +30,10 @@
 
         <TextView
             android:id="@+id/initialInfo"
+            style="@style/item_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/initial_info"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="25sp" />
+            android:text="@string/initial_info" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cvRecyclerView"
