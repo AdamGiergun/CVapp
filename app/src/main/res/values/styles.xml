@@ -22,6 +22,7 @@
     <style name="item_text_style">
         <item name="android:textSize">@dimen/item_text_size</item>
         <item name="android:fontFamily">@font/autour_one</item>
+        <item name="android:justificationMode">inter_word</item>
     </style>
 
 </resources>
