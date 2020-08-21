@@ -10,19 +10,18 @@ internal class CvRecyclerAdapter (private val cv: CV) :
     RecyclerView.Adapter<CvRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val cardView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.cv_item, parent, false) as CardView
-        return ViewHolder(cardView)
+        return ViewHolder.from(parent)
     }
 
     override fun getItemCount() = cv.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val cvItem = cv.get(position)
+        val cvItem = cv[position]
         holder.bind(cvItem)
     }
 
     internal class ViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
+
         fun bind(cvItem: CvItem) {
             val itemTextView = itemView.findViewById<TextView>(R.id.itemTextView)
             itemTextView.text = cvItem.text
@@ -40,5 +39,15 @@ internal class CvRecyclerAdapter (private val cv: CV) :
             val cardView = itemView as CardView
             cardView.setCardBackgroundColor(color)
         }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val cardView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.cv_item, parent, false) as CardView
+                return ViewHolder(cardView)
+            }
+        }
     }
+
+
 }
