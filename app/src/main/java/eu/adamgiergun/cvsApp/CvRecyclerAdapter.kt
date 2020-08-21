@@ -20,7 +20,7 @@ internal class CvRecyclerAdapter (private val cv: CV) :
         holder.bind(cvItem)
     }
 
-    internal class ViewHolder(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
+    internal class ViewHolder private constructor(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(cvItem: CvItem) {
             val itemTextView = itemView.findViewById<TextView>(R.id.itemTextView)
