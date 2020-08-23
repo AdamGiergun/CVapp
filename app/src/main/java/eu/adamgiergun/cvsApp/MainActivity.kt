@@ -1,11 +1,10 @@
 package eu.adamgiergun.cvsApp
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.*
 import android.os.*
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
@@ -34,14 +33,6 @@ internal class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ViewModel
 
-    private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            initialInfo.visibility = View.GONE
-            cvRecyclerView.adapter = viewModel.getCvRecyclerAdapter(id)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,18 +41,20 @@ internal class MainActivity : AppCompatActivity() {
 
         isFullscreen = true
 
-        cvRecyclerView.setOnClickListener { toggle() }
-
-        registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
         viewModel = ViewModelProvider.AndroidViewModelFactory
             .getInstance(this.application)
             .create(ViewModel::class.java)
+
+        viewModel.cv.observe(this, {
+            cvRecyclerView.adapter = viewModel.getCvRecyclerAdapter()
+        })
+
+        cvRecyclerView.setOnClickListener { toggle() }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(onDownloadComplete)
+        unregisterReceiver(viewModel.onDownloadComplete)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

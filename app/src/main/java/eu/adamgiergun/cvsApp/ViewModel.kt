@@ -1,14 +1,33 @@
 package eu.adamgiergun.cvsApp
 
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 internal class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val cvDataSource: CvDataSource
 
+    private val _cv = MutableLiveData<CV>()
+    val cv: LiveData<CV>
+        get() = _cv
+
+    val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            _cv.value = getCv(id)
+        }
+    }
+
     init {
+        val initialInfo = getApp().getString(R.string.initial_info)
+        _cv.value = CV(initialInfo)
+        getApp().registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         cvDataSource = CvDataSource(getDownloadManager())
     }
 
@@ -27,7 +46,8 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    internal fun getCvRecyclerAdapter(id: Long): CvRecyclerAdapter {
-        return CvRecyclerAdapter(getCv(id))
+    internal fun getCvRecyclerAdapter(): CvRecyclerAdapter {
+        return CvRecyclerAdapter(_cv.value!!)
     }
+
 }
