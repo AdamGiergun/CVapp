@@ -2,12 +2,13 @@ package eu.adamgiergun.cvsApp
 
 import android.graphics.Typeface
 import android.view.*
-import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import eu.adamgiergun.cvsApp.databinding.CvItemBinding
 
-internal class CvRecyclerAdapter (private val cv: CV) :
-    RecyclerView.Adapter<CvRecyclerAdapter.ViewHolder>() {
+internal class CvRecyclerAdapter (private val cv: CV): ListAdapter<CvItem, CvRecyclerAdapter.ViewHolder>(CvItemDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -20,10 +21,10 @@ internal class CvRecyclerAdapter (private val cv: CV) :
         holder.bind(cvItem)
     }
 
-    internal class ViewHolder private constructor(itemView: CardView) : RecyclerView.ViewHolder(itemView) {
+    internal class ViewHolder private constructor(private val binding: CvItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cvItem: CvItem) {
-            val itemTextView = itemView.findViewById<TextView>(R.id.itemTextView)
+            val itemTextView = binding.itemTextView
             itemTextView.text = cvItem.text
 
             val color: Int
@@ -42,12 +43,20 @@ internal class CvRecyclerAdapter (private val cv: CV) :
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val cardView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cv_item, parent, false) as CardView
-                return ViewHolder(cardView)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = CvItemBinding.inflate(layoutInflater, parent, false)
+                return ViewHolder(binding)
             }
         }
     }
+}
 
+internal class CvItemDiffCallback: DiffUtil.ItemCallback<CvItem>() {
+    override fun areItemsTheSame(oldItem: CvItem, newItem: CvItem): Boolean {
+        return oldItem == newItem
+    }
 
+    override fun areContentsTheSame(oldItem: CvItem, newItem: CvItem): Boolean {
+        return oldItem == newItem
+    }
 }
