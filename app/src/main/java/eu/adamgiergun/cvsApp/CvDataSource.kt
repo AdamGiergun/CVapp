@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
 import kotlin.properties.Delegates
 
-class CvDataSource (downloadManager: DownloadManager) {
+class CvDataSource(downloadManager: DownloadManager) {
 
     internal var downloadId by Delegates.notNull<Long>()
 
@@ -67,18 +67,20 @@ class CvDataSource (downloadManager: DownloadManager) {
                             .openInputStream(getLocalUri())
                     }
 
-                    val myParser = XmlPullParserFactory.newInstance().newPullParser()
-                    myParser.setInput(getInputStream(), null)
+                    getInputStream().use {
+                        val myParser = XmlPullParserFactory.newInstance().newPullParser()
+                        myParser.setInput(it, null)
 
-                    var event = myParser.eventType
-                    while (event != XmlPullParser.END_DOCUMENT) {
-                        when (event) {
-                            XmlPullParser.START_TAG ->
-                                cv.add(CvItem(true, myParser.name.replace("_", " ")))
-                            XmlPullParser.TEXT ->
-                                cv.add(CvItem(false, myParser.text))
+                        var event = myParser.eventType
+                        while (event != XmlPullParser.END_DOCUMENT) {
+                            when (event) {
+                                XmlPullParser.START_TAG ->
+                                    cv.add(CvItem(true, myParser.name.replace("_", " ")))
+                                XmlPullParser.TEXT ->
+                                    cv.add(CvItem(false, myParser.text))
+                            }
+                            event = myParser.next()
                         }
-                        event = myParser.next()
                     }
                 }
             }

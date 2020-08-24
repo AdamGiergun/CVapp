@@ -50,7 +50,7 @@ internal class MainActivity : AppCompatActivity() {
         cvRecyclerView.adapter = adapter
 
         viewModel.cv.observe(this, {
-             adapter.submitList(it)
+            adapter.submitList(it)
         })
 
         cvRecyclerView.setOnClickListener { toggle() }
@@ -112,4 +112,16 @@ internal class MainActivity : AppCompatActivity() {
          */
         private const val UI_ANIMATION_DELAY = 300
     }
+
+    /* some tests for finding non-closed resource */
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        try {
+//            Class.forName("dalvik.system.CloseGuard")
+//                .getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+//                .invoke(null, true)
+//        } catch (e: ReflectiveOperationException) {
+//            throw RuntimeException(e)
+//        }
+//    }
 }
