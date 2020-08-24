@@ -1,6 +1,7 @@
 package eu.adamgiergun.cvsApp
 
-import android.app.*
+import android.app.Application
+import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,7 +18,7 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
     val cv: LiveData<CV>
         get() = _cv
 
-    val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
+    private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             _cv.value = getCv(id)
@@ -45,9 +46,4 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
             CV(infoAboutDownloadFailure)
         }
     }
-
-    internal fun getCvRecyclerAdapter(): CvRecyclerAdapter {
-        return CvRecyclerAdapter(_cv.value!!)
-    }
-
 }

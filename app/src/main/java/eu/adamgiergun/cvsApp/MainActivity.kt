@@ -1,12 +1,13 @@
 package eu.adamgiergun.cvsApp
 
 import android.annotation.SuppressLint
-import android.os.*
-import android.view.*
+import android.os.Bundle
+import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_fullscreen.*
+
 
 internal class MainActivity : AppCompatActivity() {
     private val hideHandler = Handler()
@@ -45,16 +46,14 @@ internal class MainActivity : AppCompatActivity() {
             .getInstance(this.application)
             .create(ViewModel::class.java)
 
+        val adapter = CvRecyclerAdapter()
+        cvRecyclerView.adapter = adapter
+
         viewModel.cv.observe(this, {
-            cvRecyclerView.adapter = viewModel.getCvRecyclerAdapter()
+             adapter.submitList(it)
         })
 
         cvRecyclerView.setOnClickListener { toggle() }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(viewModel.onDownloadComplete)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
