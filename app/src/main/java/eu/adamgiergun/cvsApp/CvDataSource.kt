@@ -44,21 +44,6 @@ class CvDataSource (downloadManager: DownloadManager) {
                 }
 
         downloadId = downloadManager.enqueue(request)
-
-        Thread(Runnable {
-            var isDownloading = true
-            while (isDownloading) {
-                getDownloadManagerCursor(downloadManager).use {
-                    if (it.moveToFirst()) {
-                        if (isDownloadStatusSuccessful(it)) {
-                            isDownloading = false
-                        }
-                    } else {
-                        isDownloading = false
-                    }
-                }
-            }
-        }).start()
     }
 
     internal fun getCvContent(

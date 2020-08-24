@@ -9,10 +9,13 @@ import android.content.IntentFilter
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal class ViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val cvDataSource: CvDataSource
+    private lateinit var cvDataSource: CvDataSource
 
     private val _cv = MutableLiveData<CV>()
     val cv: LiveData<CV>
@@ -29,7 +32,9 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
         val initialInfo = getApp().getString(R.string.initial_info)
         _cv.value = CV(initialInfo)
         getApp().registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        cvDataSource = CvDataSource(getDownloadManager())
+        viewModelScope.launch(Dispatchers.IO) {
+            cvDataSource = CvDataSource(getDownloadManager())
+        }
     }
 
     private fun getApp() = getApplication<Application>()
