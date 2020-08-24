@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="cvItem"
             type="eu.adamgiergun.cvsApp.CvItem" />
@@ -10,13 +12,16 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cvItemCardColor="@{cvItem}">
 
         <TextView
             android:id="@+id/itemTextView"
             style="@style/item_text_style"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{cvItem.text}"
+            app:cvItemTextStyle="@{cvItem}" />
 
     </androidx.cardview.widget.CardView>
 </layout>

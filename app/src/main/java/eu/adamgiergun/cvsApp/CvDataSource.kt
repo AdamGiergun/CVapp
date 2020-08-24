@@ -51,9 +51,10 @@ class CvDataSource(downloadManager: DownloadManager) {
         contentResolver: ContentResolver
     ): CV {
         val cv = CV()
-        getDownloadManagerCursor(downloadManager).use {
-            if (it.moveToFirst()) {
-                if (isDownloadStatusSuccessful(it)) {
+        getDownloadManagerCursor(downloadManager).use { cursor ->
+            if (cursor.moveToFirst()) {
+                if (isDownloadStatusSuccessful(cursor)) {
+
                     fun getInputStream(): InputStream? {
                         fun getLocalUri(): Uri {
                             fun Cursor.getLocalUriString(): String {
@@ -61,15 +62,15 @@ class CvDataSource(downloadManager: DownloadManager) {
                                     this.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
                                 return this.getString(localUriColumnIndex)
                             }
-                            return Uri.parse(it.getLocalUriString())
+                            return Uri.parse(cursor.getLocalUriString())
                         }
                         return contentResolver
                             .openInputStream(getLocalUri())
                     }
 
-                    getInputStream().use {
+                    getInputStream().use { inputStream ->
                         val myParser = XmlPullParserFactory.newInstance().newPullParser()
-                        myParser.setInput(it, null)
+                        myParser.setInput(inputStream, null)
 
                         var event = myParser.eventType
                         while (event != XmlPullParser.END_DOCUMENT) {

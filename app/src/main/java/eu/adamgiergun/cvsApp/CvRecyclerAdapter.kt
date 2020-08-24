@@ -1,9 +1,7 @@
 package eu.adamgiergun.cvsApp
 
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,22 +20,9 @@ internal class CvRecyclerAdapter: ListAdapter<CvItem, CvRecyclerAdapter.ViewHold
 
     internal class ViewHolder private constructor(private val binding: CvItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(cvItem: CvItem) {
-            val itemTextView = binding.itemTextView
-            itemTextView.text = cvItem.text
-
-            val color: Int
-            val resources = itemView.context.resources
-            color = if (cvItem.isHeader) {
-                itemTextView.setTypeface(itemTextView.typeface, Typeface.BOLD)
-                resources.getColor(R.color.colorHeader, null)
-
-            } else {
-                itemTextView.typeface = Typeface.create(itemTextView.typeface, Typeface.NORMAL)
-                resources.getColor(R.color.colorItem, null)
-            }
-            val cardView = itemView as CardView
-            cardView.setCardBackgroundColor(color)
+        fun bind(item: CvItem) {
+            binding.cvItem = item
+            binding.executePendingBindings()
         }
 
         companion object {
