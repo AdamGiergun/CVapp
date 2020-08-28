@@ -5,13 +5,12 @@ import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 internal class ViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -20,6 +19,10 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
     private val _cv = MutableLiveData<CV>()
     val cv: LiveData<CV>
         get() = _cv
+
+    private val _response = MutableLiveData<String>()
+    val response: LiveData<String>
+        get() = _response
 
     private val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -31,10 +34,26 @@ internal class ViewModel(application: Application) : AndroidViewModel(applicatio
     init {
         val initialInfo = getApp().getString(R.string.initial_info)
         _cv.value = CV(initialInfo)
-        getApp().registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        viewModelScope.launch(Dispatchers.IO) {
-            cvDataSource = CvDataSource(getDownloadManager())
-        }
+//        getApp().registerReceiver(onDownloadComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+//        viewModelScope.launch(Dispatchers.IO) {
+//            cvDataSource = CvDataSource(getDownloadManager())
+//        }
+
+        getCvAsString()
+    }
+
+    private fun getCvAsString() {
+        CvApi.retrofitService.getCv().enqueue( object: Callback<List<CvItem>> {
+            override fun onFailure(call: Call<List<CvItem>>, t: Throwable) {
+                //_response.value = "Failure: " + t.message
+                _cv.value = CV("Failure: " + t.message)
+            }
+
+            override fun onResponse(call: Call<List<CvItem>>, response: Response<List<CvItem>>) {
+                //_response.value = "Success: " + response.body()
+                _cv.value = CV("Success: " + response.body()?.size)
+            }
+        })
     }
 
     private fun getApp() = getApplication<Application>()

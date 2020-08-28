@@ -1,4 +1,4 @@
 package eu.adamgiergun.cvsApp
 
-internal data class CvItem (val isHeader : Boolean, val text : String) {
+internal data class CvItem (val text : String, val isHeader : Boolean) {
 }

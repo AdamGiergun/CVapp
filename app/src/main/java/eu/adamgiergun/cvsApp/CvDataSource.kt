@@ -76,9 +76,9 @@ class CvDataSource(downloadManager: DownloadManager) {
                         while (event != XmlPullParser.END_DOCUMENT) {
                             when (event) {
                                 XmlPullParser.START_TAG ->
-                                    cv.add(CvItem(true, myParser.name.replace("_", " ")))
+                                    cv.add(CvItem( myParser.name.replace("_", " "), true))
                                 XmlPullParser.TEXT ->
-                                    cv.add(CvItem(false, myParser.text))
+                                    cv.add(CvItem(myParser.text, false))
                             }
                             event = myParser.next()
                         }
