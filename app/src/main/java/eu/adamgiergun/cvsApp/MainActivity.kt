@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import eu.adamgiergun.cvsApp.databinding.ActivityFullscreenBinding
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
 
@@ -32,26 +34,21 @@ internal class MainActivity : AppCompatActivity() {
 
     private val hideRunnable = Runnable { hide() }
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: CvViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_fullscreen)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         isFullscreen = true
 
-        viewModel = ViewModelProvider.AndroidViewModelFactory
-            .getInstance(this.application)
-            .create(ViewModel::class.java)
+        val binding: ActivityFullscreenBinding = DataBindingUtil.setContentView(this, R.layout.activity_fullscreen)
+        binding.lifecycleOwner = this
 
-        val adapter = CvRecyclerAdapter()
-        cvRecyclerView.adapter = adapter
-
-        viewModel.cv.observe(this, {
-            adapter.submitList(it)
-        })
+        viewModel = ViewModelProvider(this).get(CvViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.cvRecyclerView.adapter = CvRecyclerAdapter()
 
         cvRecyclerView.setOnClickListener { toggle() }
     }
@@ -88,6 +85,7 @@ internal class MainActivity : AppCompatActivity() {
         hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
+    @Suppress("SameParameterValue")
     private fun delayedHide(delayMillis: Int) {
         hideHandler.removeCallbacks(hideRunnable)
         hideHandler.postDelayed(hideRunnable, delayMillis.toLong())

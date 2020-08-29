@@ -1,9 +1,5 @@
 <resources>
-    <string name="app_name">CV</string>
+    <string name="app_name">CV of Adam Giergun</string>
 
-    <string name="retry_button">Retry</string>
-
-    <string name="initial_info">Please wait for downloading CV.\nCheck your Internet connection if nothing happens and restart app.</string>
-
-    <string name="info_about_failed_download_of_cv">Something went wrong while downloading CV.\nCheck your Internet connection and restart app.</string>
+    <string name="image_showing_connection_status">Image showing connection status</string>
 </resources>
