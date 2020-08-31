@@ -7,6 +7,6 @@
     <color name="black_overlay">#66000000</color>
 
     <color name="colorHeader">@android:color/holo_blue_dark</color>
-    <color name="colorItem">@android:color/holo_blue_light</color>
+    <color name="colorItem">@android:color/white</color>
 
 </resources>

@@ -2,4 +2,5 @@
     <string name="app_name">CV of Adam Giergun</string>
 
     <string name="image_showing_connection_status">Image showing connection status</string>
+    <string name="company_or_school_logo">Company or school logo</string>
 </resources>

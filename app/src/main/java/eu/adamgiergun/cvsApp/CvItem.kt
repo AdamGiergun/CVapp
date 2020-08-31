@@ -1,3 +1,5 @@
 package eu.adamgiergun.cvsApp
 
-internal data class CvItem (val text : String, val isHeader : Boolean)
+import com.squareup.moshi.Json
+
+internal data class CvItem (val text : String, val isHeader : Boolean, @Json(name="img_src") val imgSrcUrl: String)

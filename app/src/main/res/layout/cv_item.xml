@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -15,13 +16,28 @@
         android:layout_height="wrap_content"
         app:cvItemCardColor="@{cvItem}">
 
-        <TextView
-            android:id="@+id/itemTextView"
-            style="@style/item_text_style"
+        <LinearLayout
+            android:id="@+id/LinearLayoutInCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{cvItem.text}"
-            app:cvItemTextStyle="@{cvItem}" />
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/company_or_school_logo"
+                app:imageUrl="@{cvItem.imgSrcUrl}"/>
+
+            <TextView
+                android:id="@+id/itemTextView"
+                style="@style/item_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{cvItem.text}"
+                app:cvItemTextStyle="@{cvItem}" />
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 </layout>

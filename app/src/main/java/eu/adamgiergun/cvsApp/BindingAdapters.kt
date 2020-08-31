@@ -5,8 +5,12 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 
 @BindingAdapter("listData")
 internal fun bindRecyclerView(recyclerView: RecyclerView, data: List<CvItem>?) {
@@ -49,6 +53,33 @@ fun bindStatus(statusImageView: ImageView, status: CvApiStatus?) {
         }
         CvApiStatus.DONE -> {
             statusImageView.visibility = View.GONE
+        }
+    }
+}
+
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    if (imgUrl == "")
+    {
+        imgView.visibility = ImageView.GONE
+    } else {
+        imgView.visibility = ImageView.VISIBLE
+        imgUrl?.let {
+            val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+            if (imgUrl.endsWith(".svg")) {
+                GlideToVectorYou.init().with(imgView.context)
+                    .setPlaceHolder(R.drawable.loading_animation, R.drawable.ic_broken_image)
+                    .load(imgUri, imgView)
+            } else {
+                Glide.with(imgView.context)
+                    .load(imgUri)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.loading_animation)
+                            .error(R.drawable.ic_broken_image)
+                    )
+                    .into(imgView)
+            }
         }
     }
 }
