@@ -1,5 +1,6 @@
 package eu.adamgiergun.cvsApp
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.view.View
 import android.widget.ImageView
@@ -34,8 +35,13 @@ internal fun CardView.setCvItemCardBackgroundColor(item: CvItem?) {
     item?.let {
         val resources = this.context.resources
         val color = resources.getColor(
-            if (it.isHeader) {R.color.colorHeader} else { R.color.colorItem},
-            null)
+            if (it.isHeader) {
+                R.color.colorHeader
+            } else {
+                R.color.colorItem
+            },
+            null
+        )
         this.setCardBackgroundColor(color)
     }
 }
@@ -57,13 +63,15 @@ fun bindStatus(statusImageView: ImageView, status: CvApiStatus?) {
     }
 }
 
-@BindingAdapter("imageUrl")
-fun bindImage(imgView: ImageView, imgUrl: String?) {
+@BindingAdapter("imageUrl", "imageLink")
+fun bindImage(imgView: ImageView, imgUrl: String?, imgLnk: String?) {
     if (imgUrl == "")
     {
+        imgView.setOnClickListener {  }
         imgView.visibility = ImageView.GONE
     } else {
         imgView.visibility = ImageView.VISIBLE
+
         imgUrl?.let {
             val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
             if (imgUrl.endsWith(".svg")) {
@@ -80,6 +88,18 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
                     )
                     .into(imgView)
             }
+            if (imgLnk != "") {
+                imgLnk?.let {
+                    val imgLnkUri = imgLnk.toUri().buildUpon().scheme("http").build()
+                    imgView.setOnClickListener {
+                        val webLink = Intent(Intent.ACTION_VIEW)
+                        webLink.data = imgLnkUri
+                        imgView.context.startActivity(webLink)
+                    }
+                }
+            }
         }
+
+
     }
 }
